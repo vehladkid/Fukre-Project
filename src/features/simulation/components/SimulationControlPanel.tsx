@@ -238,14 +238,14 @@ export const SimulationControlPanel = () => {
                                         {isPaused ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
                                         {isPaused ? 'Resume' : 'Pause'}
                                     </button>
-                                    <div className="flex gap-1 ml-auto">
-                                        {[1, 2, 5, 10].map(s => (
+                                    <div className="flex flex-wrap gap-1 ml-auto max-w-[120px] justify-end">
+                                        {[1, 10, 60, 300, 3600].map(s => (
                                             <button
                                                 key={s}
                                                 onClick={() => setSpeed(s)}
-                                                className={`px-2 py-1 text-xs font-bold rounded ${playbackSpeed === s ? 'bg-blue-500/20 text-blue-400' : 'text-slate-400 hover:text-slate-200'}`}
+                                                className={`px-1.5 py-1 text-[10px] font-bold rounded border ${playbackSpeed === s ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
                                             >
-                                                {s}x
+                                                {s >= 3600 ? '1h/s' : s >= 60 ? `${s / 60}m/s` : `${s}x`}
                                             </button>
                                         ))}
                                     </div>

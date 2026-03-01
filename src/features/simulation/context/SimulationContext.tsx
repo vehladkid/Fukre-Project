@@ -19,6 +19,7 @@ interface SimulationContextType {
     simulatedAssets: SimulatedAsset[];
     timeline: TimelineEvent[];
     simulatedCityHealth: number | null;
+    activeZone: SimZone | null;
     toggleSimulation: () => void;
     togglePause: () => void;
     setSpeed: (speed: number) => void;
@@ -56,6 +57,7 @@ export const useSimulation = () => {
             simulatedAssets: [],
             timeline: [],
             simulatedCityHealth: null,
+            activeZone: null,
             toggleSimulation: () => { },
             togglePause: () => { },
             setSpeed: () => { },

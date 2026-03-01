@@ -6,9 +6,11 @@ import type { SimulatedAsset } from '../hooks/useSimulationEngine';
 
 export const SimulationOverlayLayer = () => {
     const map = useMap();
-    const { simulatedAssets, isActive } = useSimulation();
+    const { simulatedAssets, isActive, activeZone } = useSimulation();
 
-    // Map to track active leaflet circle instances
+    // Zone highlight reference
+    const zoneCircleRef = useRef<L.Circle | null>(null);
+    // Map to track active leaflet circle instances for assets
     const circlesRef = useRef<Map<string, L.Circle>>(new Map());
     const rafRef = useRef<number>(0);
 
@@ -19,6 +21,32 @@ export const SimulationOverlayLayer = () => {
             pane.style.zIndex = "460"; // above flood pane
         }
     }, [map]);
+
+    // Handle Zone Highlight
+    useEffect(() => {
+        if (!isActive || !activeZone) {
+            if (zoneCircleRef.current) {
+                map.removeLayer(zoneCircleRef.current);
+                zoneCircleRef.current = null;
+            }
+            return;
+        }
+
+        if (!zoneCircleRef.current) {
+            zoneCircleRef.current = L.circle([activeZone.centroid_lat, activeZone.centroid_lng], {
+                pane: 'simulationPane',
+                radius: 1200, // 1.2km static highlight
+                color: '#ef4444',
+                fillColor: '#ef4444',
+                fillOpacity: 0.15,
+                weight: 1,
+                dashArray: '5, 10',
+                interactive: false
+            }).addTo(map);
+        } else {
+            zoneCircleRef.current.setLatLng([activeZone.centroid_lat, activeZone.centroid_lng]);
+        }
+    }, [isActive, activeZone, map]);
 
     // Cleanup unmounted assets
     useEffect(() => {
@@ -55,8 +83,8 @@ export const SimulationOverlayLayer = () => {
                 if (!circle) {
                     circle = L.circle([asset.latitude, asset.longitude], {
                         pane: 'simulationPane',
-                        radius: 50,
-                        weight: 1,
+                        radius: 80,
+                        weight: 2,
                         interactive: false
                     }).addTo(map);
                     circlesRef.current.set(asset.asset_id, circle);
@@ -65,56 +93,40 @@ export const SimulationOverlayLayer = () => {
                 // Calculate visual state
                 const isFailed = asset.animationState === 'FAILED';
                 const isDegraded = asset.animationState === 'DEGRADED';
-                const isStressed = asset.animationState === 'STRESSED';
 
-                // Target Base Radius based on failure propagation
-                let targetRadius = Math.max(80, asset.failureProgress * 3);
-                if (isFailed) targetRadius = 600; // Large fixed area for failure
+                // Target Base Radius
+                let targetRadius = Math.max(100, asset.failureProgress * 4);
+                if (isFailed) targetRadius = 250;
 
-                // Sinusoidal Time Interpolation (breathing / pulsing)
-                const pulseTime = elapsed / 1000; // seconds
+                // Pulse Logic
+                const pulseTime = elapsed / 1000;
                 let displayRadius = targetRadius;
-                let opacity = 0.15;
-                let color = '#facc15'; // Default yellow
+                let opacity = 0.4;
+                let color = '#facc15';
 
                 if (isFailed) {
-                    color = '#ef4444';
-                    // Failed: rapid expanding shockwave and high opacity pulse
-                    const shockwaveInterval = (pulseTime % 1.5) / 1.5;
-                    displayRadius = targetRadius + (Math.sin(pulseTime * 4) * 50);
-                    opacity = 0.2 + (0.2 * Math.max(0, 1 - shockwaveInterval));
-                    circle.setStyle({ weight: 2 });
+                    color = '#ff0000';
+                    const pulse = Math.sin(pulseTime * 6) * 40;
+                    displayRadius = targetRadius + pulse;
+                    opacity = 0.5 + (Math.sin(pulseTime * 6) * 0.2);
+                    circle.setStyle({ weight: 3 });
                 } else if (isDegraded) {
-                    color = '#f59e0b';
-                    // Degraded: steady orange breathing
-                    displayRadius = targetRadius + (Math.sin(pulseTime * 2) * 30);
-                    opacity = 0.2 + (Math.sin(pulseTime * 2) * 0.1);
-                    circle.setStyle({ weight: 1.5 });
-                } else if (isStressed) {
-                    color = '#facc15';
-                    // Stressed: subtle yellow wobble
+                    color = '#f97316';
+                    displayRadius = targetRadius + (Math.sin(pulseTime * 3) * 20);
+                    opacity = 0.3 + (Math.sin(pulseTime * 3) * 0.1);
+                    circle.setStyle({ weight: 2 });
+                } else {
                     displayRadius = targetRadius + (Math.sin(pulseTime) * 10);
-                    opacity = 0.1 + (Math.sin(pulseTime) * 0.05);
-                    circle.setStyle({ weight: 1 });
+                    opacity = 0.2 + (Math.sin(pulseTime) * 0.05);
                 }
 
-                // Propagation Wavefront (Task 6)
+                // Source Failure Highlight (Expanding Shockwave)
                 if (asset.is_source_failure) {
-                    const waveTime = elapsed / 1000;
-                    const waveRadius = targetRadius + (waveTime * 50); // Expand indefinitely 
-                    const maxWaveRadius = 2000;
-                    const constrainedWaveRadius = waveRadius % maxWaveRadius;
-
-                    const waveOpacity = 0.3 * (1 - (constrainedWaveRadius / maxWaveRadius));
-
-                    // We reuse the existing circle for the source, but give it an epic expanding ring style
-                    // Wait, a Leaflet Circle can only have one radius.
-                    // Let's create a *second* circle for the wavefront if needed, OR just utilize `pathOptions.dashArray` 
-                    // To keep it clean, we'll just pulse the source asset massively.
-                    displayRadius = constrainedWaveRadius;
-                    opacity = Math.max(0, waveOpacity);
-                    color = asset.healthState === 'FAILED' ? '#ef4444' : '#3b82f6';
-                    circle.setStyle({ weight: 2, dashArray: '4, 8' });
+                    const wave = (pulseTime % 2) / 2; // 2s cycle
+                    displayRadius = targetRadius + (wave * 800);
+                    opacity = 0.6 * (1 - wave);
+                    color = '#ef4444';
+                    circle.setStyle({ weight: 4, dashArray: '10, 20' });
                 }
 
                 circle.setRadius(displayRadius);

@@ -13,7 +13,7 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { type LatLngExpression } from 'leaflet';
 import { ArrowLeft, Activity, Cpu } from 'lucide-react';
 import {
@@ -64,6 +64,21 @@ function SandboxAssetLayer({
             onClickAsset={() => { /* no-op in sandbox */ }}
         />
     );
+}
+
+// ── MapRecenter — handles auto-panning ──────────────────────────────────────
+function MapRecenter() {
+    const map = useMap();
+    const { activeZone, isActive } = useSimulation();
+
+    useEffect(() => {
+        if (isActive && activeZone) {
+            console.log('[Sandbox] Recentering map to:', activeZone.name, [activeZone.centroid_lat, activeZone.centroid_lng]);
+            map.setView([activeZone.centroid_lat, activeZone.centroid_lng], 14, { animate: true });
+        }
+    }, [activeZone, isActive, map]);
+
+    return null;
 }
 
 // ── Clock HUD (top centre) ────────────────────────────────────────────────────
@@ -179,6 +194,8 @@ const SimulationSandboxInner = () => {
                         url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
                         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
                     />
+                    {/* Auto-panner */}
+                    <MapRecenter />
                     {/* Infrastructure markers — same LOD system as MapView */}
                     <SandboxAssetLayer onAssetsChange={handleAssetsChange} />
                     {/* Simulation failure + propagation wave overlays */}

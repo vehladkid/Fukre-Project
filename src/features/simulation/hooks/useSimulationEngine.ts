@@ -38,6 +38,7 @@ export interface SimulationState {
     simulatedAssets: SimulatedAsset[];
     timeline: TimelineEvent[];
     simulatedCityHealth: number | null;
+    activeZone: { id: string; name: string; centroid_lat: number; centroid_lng: number } | null;
 }
 
 const DECAY_FACTOR = 0.6;
@@ -58,7 +59,8 @@ export const useSimulationEngine = (viewportAssets: MapAsset[]) => {
         isFloodActive: false,
         simulatedAssets: [],
         timeline: [],
-        simulatedCityHealth: null
+        simulatedCityHealth: null,
+        activeZone: null
     });
 
     // ─── High-Performance Simulation Refs (No re-renders) ──
@@ -318,11 +320,17 @@ export const useSimulationEngine = (viewportAssets: MapAsset[]) => {
             timelineRef.current = [...newEvents, ...timelineRef.current].slice(0, 20);
         }
 
-        // 4. Time formatting
+        // 4. Time formatting (D / HH:MM:SS)
         const fmtTime = (secs: number) => {
-            const h = Math.floor(secs / 3600).toString().padStart(2, '0');
-            const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0');
-            const s = Math.floor(secs % 60).toString().padStart(2, '0');
+            const d = Math.floor(secs / 86400);
+            const remainingSecs = secs % 86400;
+            const h = Math.floor(remainingSecs / 3600).toString().padStart(2, '0');
+            const m = Math.floor((remainingSecs % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(remainingSecs % 60).toString().padStart(2, '0');
+
+            if (d > 0) {
+                return `T+${d}d ${h}:${m}:${s}`;
+            }
             return `T+${h}:${m}:${s}`;
         };
 
@@ -484,7 +492,8 @@ export const useSimulationEngine = (viewportAssets: MapAsset[]) => {
         setState(prev => ({
             ...prev,
             simulatedAssets: Array.from(activeMutationsRef.current.values()),
-            timeline: timelineRef.current
+            timeline: timelineRef.current,
+            activeZone: zone
         }));
     }, [addLog]);
 
@@ -513,7 +522,8 @@ export const useSimulationEngine = (viewportAssets: MapAsset[]) => {
             isFloodActive: false,
             simulatedAssets: [],
             timeline: [],
-            simulatedCityHealth: null
+            simulatedCityHealth: null,
+            activeZone: null
         });
     }, []);
 
@@ -546,7 +556,8 @@ export const useSimulationEngine = (viewportAssets: MapAsset[]) => {
             formattedTime: 'T+00:00:00',
             simulatedAssets: [],
             isFloodActive: false,
-            timeline: timelineRef.current
+            timeline: timelineRef.current,
+            activeZone: zone
         }));
 
         // Trigger event immediately — zone data is passed directly, no async lookup needed
