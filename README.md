@@ -16,6 +16,8 @@ The following accounts are available for demonstration:
 | Operator | operator@city.gov    | operator123|
 | Viewer   | viewer@city.gov      | viewer123  |
 
+## NOTE: 
+Our project currently uses supabase for backend. As you may be currently aware that supabase is not working for some ISP's. If you encounter this issue please use a VPN to check out the project website. Thank You for your Cooperation. 
 
 ## 🚀 Overview
 
