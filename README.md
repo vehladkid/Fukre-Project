@@ -1,21 +1,21 @@
+# 🌆 UIIP — Urban Intelligence Infrastructure Platform
+
+> **A City-Scale Geospatial Digital Twin for Monitoring, Predicting, and Simulating Urban Infrastructure Risk**
+
+---
+
 ## 🔐 Role-Based Demo Access
 
 UIIP implements role-based access control to simulate real municipal infrastructure governance.
 
 The following accounts are available for demonstration:
 
-| Role     | Username              | Password    |
+| Role     | Username             | Password   |
 |----------|----------------------|------------|
 | Admin    | admin@city.gov       | admin123   |
 | Operator | operator@city.gov    | operator123|
 | Viewer   | viewer@city.gov      | viewer123  |
 
-
-# 🌆 UIIP — Urban Intelligence Infrastructure Platform
-
-> **A City-Scale Geospatial Digital Twin for Monitoring, Predicting, and Simulating Urban Infrastructure Risk**
-
----
 
 ## 🚀 Overview
 
