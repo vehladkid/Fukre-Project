@@ -1,32 +1,189 @@
-# Fukre Project
+# 🌆 UIIP — Urban Intelligence Infrastructure Platform
 
-This is a React project built with Vite. It uses Tailwind CSS, Framer Motion, Recharts, and React Leaflet for UI components and visualizations.
+> **A City-Scale Geospatial Digital Twin for Monitoring, Predicting, and Simulating Urban Infrastructure Risk**
 
-## Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+---
 
-## How to Run
+## 🚀 Overview
 
-1. Open a terminal and navigate to the project directory:
-   ```bash
-   cd "Fukre-Project"
-   ```
+**UIIP (Urban Intelligence Infrastructure Platform)** is a frontend-driven urban intelligence system that transforms static infrastructure datasets into a **real-time, interactive Digital Twin**.
 
-2. Download all the required dependencies (you only need to do this once):
-   ```bash
-   npm install
-   ```
+The platform enables cities to move from **reactive infrastructure maintenance** toward **predictive and simulation-based decision making** — directly inside the browser.
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+UIIP goes beyond visualization by integrating monitoring, analytics, and infrastructure risk simulation into a unified intelligence layer.
 
-4. The terminal will display a local URL (usually `http://localhost:5173`). Open that URL in your web browser to view the application!
+---
 
-## Build for Production
-To build the app for production, run:
-```bash
-npm run build
+## 🎯 Core Capabilities
+
+✅ Monitor infrastructure health in real time
+✅ Predict asset failure risk
+✅ Simulate disaster propagation
+✅ Model temporal degradation patterns
+✅ Track infrastructure audit history
+✅ Enable decision-ready urban intelligence
+
+---
+
+## 🧠 Project Vision
+
+Modern cities typically operate **reactively**, repairing infrastructure only after failures occur.
+
+UIIP introduces a new paradigm:
+
+> **Predict → Simulate → Prevent**
+
+By combining geospatial visualization with analytics pipelines, the system helps planners anticipate failures before they impact citizens.
+
+---
+
+## 🏗️ System Architecture
+
 ```
-This will compile the TypeScript code and bundle the assets into the `dist` directory.
+Frontend (Digital Twin UI)
+        ↓
+Simulation & Analytics Engine
+        ↓
+Supabase Backend (PostgreSQL + Views)
+        ↓
+Infrastructure Data Models
+```
+
+### Key Layers
+
+* Interactive Map Interface
+* Simulation Engine
+* Analytics & Health Indexing
+* Database Views & Audit Logs
+* Infrastructure Risk Modeling
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer         | Technology                    |
+| ------------- | ----------------------------- |
+| Frontend      | React + TypeScript + Vite     |
+| Visualization | Map-based Geospatial UI       |
+| Backend       | Supabase                      |
+| Database      | PostgreSQL                    |
+| Analytics     | SQL Views & Performance Index |
+| Deployment    | Vercel                        |
+
+---
+
+## 🗄️ Database Setup
+
+The repository includes complete schema files required to recreate the backend.
+
+### Steps
+
+1. Create a new **Supabase Project**
+2. Open **SQL Editor**
+3. Execute SQL files in order:
+
+```
+phase2_infrastructure_schema.sql
+phase5_*.sql
+phase6_analytics_views.sql
+phase7_*.sql
+supabase_setup.sql
+```
+
+This will automatically configure:
+
+* Infrastructure tables
+* Analytics views
+* Audit logs
+* Simulation datasets
+
+---
+
+## ⚙️ Environment Configuration
+
+Create a `.env` file:
+
+```
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+---
+
+## ▶️ Running Locally
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Application runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 📁 Project Structure
+
+```
+UIIP/
+│
+├── public/
+├── src/
+│
+├── database/
+│   ├── schema.sql
+│   ├── analytics_views.sql
+│   └── seed_data.sql
+│
+├── README.md
+├── package.json
+└── vite.config.ts
+```
+
+---
+
+## 🔬 Key Features Implemented
+
+* Digital Twin Map View
+* Asset Health Monitoring
+* Failure Simulation Engine
+* Performance Index Modeling
+* Infrastructure Audit Tracking
+* Recovery & Integrity Analysis
+
+---
+
+## 🧭 Future Roadmap
+
+* AI-based failure prediction
+* Multi-city scaling
+* Real-time streaming data
+* Infrastructure optimization engine
+* Scenario comparison dashboard
+
+---
+
+## 👨‍💻 Team
+
+**UIIP Development Team**
+* TEJVIR SINGH
+* VANSHIAK SHARMA
+* AMBERJEET SINGH
+
+---
+
+## 🏆 Hackathon Note
+
+This project demonstrates a **software-only city intelligence platform** capable of simulation, analytics, and predictive infrastructure management without requiring physical sensors.
+
+---
+
+## 📄 License
+
+This project is developed for academic and hackathon purposes.
