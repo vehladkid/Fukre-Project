@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #0a192f;
+  --color-navy-800: #112240;
+  --color-navy-700: #233554;
+  --color-teal-500: #64ffda;
+  --color-teal-400: #4cd6b8;
+  --color-cyan-500: #00bcd4;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+}
+
+:root {
+  /* Map UI Z-Index Hierarchy */
+  --z-map-ui: 1000;
+  --z-toolbar: 1100;
+  --z-floating-btn: 1150;
+  --z-drawer: 1200;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-navy-900);
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  background: rgba(17, 34, 64, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(35, 53, 84, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(35, 53, 84, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
+  border-color: rgba(100, 255, 218, 0.3);
+}
+
+/* Scrollbar */
+.analytics-scroll {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-navy-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-navy-700);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
+}
+
+/* Leaflet map dark mode overrides */
+.leaflet-container {
+  background: #0a192f !important;
+}
+
+/* Dark tile layer (Carto dark_all) — no invert needed */
+
+/* ─── Reset Leaflet default cluster styles ──────── */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large,
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ─── Cluster icon base ────────────────────────── */
+.cluster-icon {
+  transition: transform 0.18s ease;
+}
+
+.cluster-icon:hover {
+  transform: scale(1.1);
+}
+
+/* ─── Status-aware marker animations ───────────── */
+
+/* Operational: soft green glow */
+@keyframes markerOperational {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px #22c55e88;
+  }
+
+  50% {
+    box-shadow: 0 0 14px #22c55ecc;
+  }
+}
+
+.marker-operational {
+  animation: markerOperational 3s ease-in-out infinite;
+}
+
+/* Maintenance: amber pulse */
+@keyframes markerMaintenance {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px #f59e0b88;
+    opacity: 1;
+  }
+
+  50% {
+    box-shadow: 0 0 16px #f59e0bcc;
+    opacity: 0.75;
+  }
+}
+
+.marker-maintenance {
+  animation: markerMaintenance 2s ease-in-out infinite;
+}
+
+/* Under Repair: orange expanding ring */
+@keyframes markerUnderRepair {
+  0% {
+    box-shadow: 0 0 0 3px #f9731644, 0 0 8px #f97316aa;
+  }
+
+  100% {
+    box-shadow: 0 0 0 10px #f9731600, 0 0 12px #f97316cc;
+  }
+}
+
+.marker-under-repair {
+  animation: markerUnderRepair 1.4s ease-out infinite;
+}
+
+/* Critical: red breathing */
+@keyframes markerCritical {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px #ef444488,
+      0 0 16px #ef444433;
+    opacity: 1;
+  }
+
+  50% {
+    box-shadow: 0 0 14px #ef4444cc,
+      0 0 30px #ef444466;
+    opacity: 0.85;
+  }
+}
+
+.marker-critical {
+  animation: markerCritical 1.2s ease-in-out infinite;
+}
+
+/* ─── Legacy pulse (kept for compat) ───────────── */
+@keyframes assetPulse {
+  0% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+
+  100% {
+    opacity: 0.9;
+  }
+}
+
+.pulse-alert {
+  transform-origin: center;
+  animation: assetPulse 1.8s infinite ease-in-out;
+}
+
+/* ─── AI Intelligence Overlays (Phase 9) ───────── */
+
+@keyframes pulseRed {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.pulse-red {
+  animation: pulseRed 2.5s infinite ease-in-out;
+}
+
+@keyframes amberGlow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.amber-glow {
+  animation: amberGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes greenBreath {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.subtle-breathing-green {
+  animation: greenBreath 2.5s infinite ease-in-out;
+}
+
+@keyframes aiCardSlide {
+  0% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.ai-card-slide {
+  animation: aiCardSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Map Intelligence Dock (Phase 9.2) ───────── */
+
+@keyframes panelSlideLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.panel-slide-left {
+  animation: panelSlideLeft 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes panelSlideRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.panel-slide-right {
+  animation: panelSlideRight 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeScaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-scale-in {
+  animation: fadeScaleIn 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes floodPulse {
+  0% {
+    opacity: .15;
+  }
+
+  50% {
+    opacity: .28;
+  }
+
+  100% {
+    opacity: .15;
+  }
+}
